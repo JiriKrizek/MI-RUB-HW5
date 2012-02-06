@@ -19,8 +19,6 @@ class Interval
   end
 end
 
-
-
 def get_blank_line
   blank = $stdin.readline.chomp
 
@@ -68,14 +66,30 @@ def get_test_cases
   test_cases
 end
 
+def print_all_cases(array)
+  array.each do |a|
+    puts a.size
+    a.each do |key,interval|
+      print "#{interval.a} #{interval.b}\n"
+    end
+    puts
+  end
+end
+
 def reduction(hash, m)
   reducted = Hash.new
 
   stop = 0
-  hash.each_pair do |start,interval| # -1 [-1;6];; 2[2;6] ;;3[3;7] #stop=6; 
+  hash.each_pair do |start,interval|
+    # behalf [0;  *M*  ]
     return reducted if(interval.a>m)
 
+    # covers more than previous interval
     next if interval.b<=stop
+
+    # is interval next to previous one?
+    return Hash.new if(start > stop)
+
     stop = interval.b
     reducted[start]=interval
   end
@@ -85,6 +99,8 @@ end
 
 test_cases = get_test_cases
 get_blank_line
+
+all_cases = Array.new
 
 for i in 1..test_cases
   intervals = Hash.new
@@ -111,6 +127,9 @@ for i in 1..test_cases
     end
     p intervals
   end
-    sorted=Hash[intervals.sort]
-    print "Reducted: #{reduction(sorted, m)}"
+  sorted=Hash[intervals.sort]
+    
+  all_cases << reduction(sorted, m)
+
+  print_all_cases(all_cases)
 end
