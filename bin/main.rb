@@ -59,11 +59,9 @@ for i in 1..test_cases
   
   while(line = $stdin.readline.chomp)
     if(line == "0 0")
-      get_blank_line
+      get_blank_line unless i==test_cases
       break
     end
-
-    p "Line: #{line}"
     
     integers=line.chomp.split(' ')
     unless integers.size == 2
@@ -74,11 +72,10 @@ for i in 1..test_cases
     begin
       a = Integer(integers[0])
       b = Integer(integers[1])
-      i = Interval.new(a,b)
+      interval = Interval.new(a,b)
     rescue ArgumentError
       print "Error: interval value is invalid"
       exit
     end
-
   end
 end
