@@ -14,7 +14,8 @@ class Interval
       @b = start
     end
 
-    @len = @b - @a
+    # vzdalenost bereme az od nuly
+    a>=0 ? @len = @b - @a : @len = @b
   end
 end
 
@@ -67,6 +68,19 @@ def get_test_cases
   test_cases
 end
 
+def reduction(hash)
+  reducted = Hash.new
+
+  stop = 0
+  hash.each_pair do |start,interval|
+    next if start<stop
+    stop = interval.b
+    reducted[start]=interval
+  end
+
+  reducted
+end
+
 test_cases = get_test_cases
 get_blank_line
 
@@ -85,18 +99,16 @@ for i in 1..test_cases
     end
     
     interval=get_integer(line)
-    p "New: #{interval}"
+    interval.a>=0 ? starts_at = interval.a : starts_at = 0
 
-    if intervals.key?(interval.a)
+    if intervals.key?(starts_at)
       # Replace interval with longer interval
-      print "contains #{interval.a}"
-      intervals[interval.a] = interval if intervals[interval.a].len < interval.len 
+      intervals[starts_at] = interval if intervals[starts_at].len < interval.len 
     else
-      print "not contain #{interval.a}"
-      intervals[interval.a] = interval
+      intervals[starts_at] = interval
     end
     p intervals
-    p Hash[intervals.sort]
-
   end
+    sorted=Hash[intervals.sort]
+    p reduction(sorted)
 end
