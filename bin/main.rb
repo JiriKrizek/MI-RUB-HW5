@@ -3,12 +3,22 @@
 # the segment [0,M].
 
 class Interval
-  attr_reader :m
+  attr_reader :a, :b, :len
 
-  def initialize(interval)
-    @m = interval
+  def initialize(ending, start=0)
+    if(start <= ending) 
+      @a = start
+      @b = ending
+    else
+      @a = ending
+      @b = start
+    end
+
+    @len = @b - @a
   end
 end
+
+
 
 def get_blank_line
   blank = $stdin.readline.chomp
@@ -44,15 +54,31 @@ get_blank_line
 for i in 1..test_cases
   puts "Test case #{i}, enter m:"
   m = get_m
-  interval = Interval.new(m)
-  puts "Interval is [0-#{m}]"
+  dest_interval = Interval.new(m)
+  puts "dest interval is [0-#{m}]"
   
-  while(line = $stdin.readline)
-    if(line.chomp == "0 0")
+  while(line = $stdin.readline.chomp)
+    if(line == "0 0")
       get_blank_line
       break
     end
 
     p "Line: #{line}"
+    
+    integers=line.chomp.split(' ')
+    unless integers.size == 2
+      print "Error: interval can have only two values, you entered #{integers.size}"
+      exit
+    end
+
+    begin
+      a = Integer(integers[0])
+      b = Integer(integers[1])
+      i = Interval.new(a,b)
+    rescue ArgumentError
+      print "Error: interval value is invalid"
+      exit
+    end
+
   end
 end
