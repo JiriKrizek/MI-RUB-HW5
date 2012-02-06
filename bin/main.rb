@@ -68,12 +68,14 @@ def get_test_cases
   test_cases
 end
 
-def reduction(hash)
+def reduction(hash, m)
   reducted = Hash.new
 
   stop = 0
-  hash.each_pair do |start,interval|
-    next if start<stop
+  hash.each_pair do |start,interval| # -1 [-1;6];; 2[2;6] ;;3[3;7] #stop=6; 
+    return reducted if(interval.a>m)
+
+    next if interval.b<=stop
     stop = interval.b
     reducted[start]=interval
   end
@@ -110,5 +112,5 @@ for i in 1..test_cases
     p intervals
   end
     sorted=Hash[intervals.sort]
-    p reduction(sorted)
+    print "Reducted: #{reduction(sorted, m)}"
 end
